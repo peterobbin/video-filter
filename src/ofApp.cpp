@@ -141,12 +141,14 @@ void ofApp::gotMessage(ofMessage msg){
 void ofApp::dragEvent(ofDragInfo dragInfo){ 
     if (dragInfo.files.size() > 0  &&  dragInfo.files.size() < 2) {
         filepath = dragInfo.files[0];
-        video.load(filepath);
-        
-        videoAspectRatio = video.getWidth()/video.getHeight();
-        video.play();
-        vidDropped = true;
-
+        try {
+            video.load(filepath);
+            videoAspectRatio = video.getWidth()/video.getHeight();
+            video.play();
+            vidDropped = true;
+        } catch (exception e) {
+            cout<<e.what()<<endl;
+        }
         
     }
 
