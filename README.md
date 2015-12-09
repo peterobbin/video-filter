@@ -12,5 +12,6 @@ This openFramework based app is intend to do realtime video effects. The final g
 - Lens Effects (calculating brightest pixels)
 - Depth Blur for Kinect Image
 - Distortions
+- Face Block?
 
 
