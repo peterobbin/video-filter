@@ -25,6 +25,7 @@ class ofApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     
     void blur(float bluramt, ofVideoPlayer &vid, ofVec2f &vidPos);
+    void bw(float bwShift, ofVideoPlayer &vid, ofVec2f &vidPos);
     
     ofVideoPlayer   video;
     ofVec2f         videoPos;
@@ -36,7 +37,10 @@ class ofApp : public ofBaseApp{
     ofFbo           fboBlurTwoPass;
     ofShader        shaderBlurY;
     
+    ofShader        shaderBW;
+    ofFbo           bwPass;
     
+    ofFbo           output;
     
     float videoAspectRatio;
     bool vidDropped;
@@ -45,6 +49,8 @@ class ofApp : public ofBaseApp{
     
     ofParameter<bool> enableBlur;
     ofParameter<float> bluramt;
+    ofParameter<bool> enableBW;
+    ofParameter<float> bwShift;
     
     
 };

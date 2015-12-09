@@ -5,15 +5,18 @@ void ofApp::setup(){
     
     shaderBlurX.load("blurx.vert","blurx.frag");
     shaderBlurY.load("blury.vert","blury.frag");
+    shaderBW.load("bw.vert", "bw.frag");
+    
     
     gui.setup();
     gui.add(enableBlur.set("enable Blur",true));
     gui.add(bluramt.set("blur amount", 0.0, 0.0, 5.0));
+    gui.add(enableBW.set("enable B/W",true));
+    gui.add(bwShift.set("B/W shift", 0.0, -1.0, 1.0));
     
     ofBackground(50);
     videoPos = ofVec2f(gui.getWidth() + 20, 0);
     greeting = "Drag & Drop Video to Start";
-    cout<<greeting.length()<<endl;
     
     ofSetWindowShape(8 * greeting.length() + 40, 13.6 + 40);
     ofSetWindowPosition(ofGetScreenWidth() / 2 - ofGetWidth()/2, ofGetScreenHeight()/2 - ofGetHeight());
@@ -33,11 +36,19 @@ void ofApp::draw(){
     if (!vidDropped) {
         ofDrawBitmapString(greeting, 20, 20);
     }else{
+        video.draw(videoPos);
         if (enableBlur) {
             blur(bluramt, video, videoPos);
-        }else{
-            video.draw(videoPos);
+           
         }
+        
+        if (enableBW){
+            bw(bwShift, video, videoPos);
+        }
+        
+         output.draw(videoPos);
+        
+        
         gui.draw();
         ofDrawBitmapString("File Path: " + filepath, gui.getWidth() + 30, ofGetHeight() - 10);
         ofSetWindowShape(gui.getWidth() + video.getWidth() + 20, video.getHeight());
@@ -53,8 +64,6 @@ void ofApp::blur(float bluramt, ofVideoPlayer &vid, ofVec2f &vidPos){
         
         fboBlurOnePass.allocate(image.getWidth(), image.getHeight());
         fboBlurTwoPass.allocate(image.getWidth(), image.getHeight());
-        
-        
         
         float blur = bluramt;
         
@@ -79,12 +88,34 @@ void ofApp::blur(float bluramt, ofVideoPlayer &vid, ofVec2f &vidPos){
         
         //----------------------------------------------------------
         ofSetColor(ofColor::white);
-        fboBlurTwoPass.draw(vidPos);
+        //fboBlurTwoPass.draw(vidPos);
+        output = fboBlurTwoPass;
     }
-    
-  
-    
-    
+}
+
+//--------------------------------------------------------------
+
+void ofApp::bw(float bwShift, ofVideoPlayer &vid, ofVec2f &vidPos){
+     if (vid.isFrameNew()) {
+         
+         image.grabScreen(vidPos.x, vidPos.y, vid.getWidth(), vid.getHeight());
+         bwPass.allocate(image.getWidth(), image.getHeight());
+         
+         //----------------------------------------------------------
+         bwPass.begin();
+         shaderBW.begin();
+         shaderBW.setUniform1f("u_bwshift", bwShift);
+         shaderBW.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
+         shaderBW.setUniform2f("u_tex0Resolution", image.getWidth(), image.getHeight());
+         output.draw(0, 0);
+         shaderBW.end();
+         bwPass.end();
+         //----------------------------------------------------------
+         ofSetColor(ofColor::white);
+         output = bwPass;
+      
+         
+     }
 }
 
 //--------------------------------------------------------------
@@ -146,6 +177,8 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
             videoAspectRatio = video.getWidth()/video.getHeight();
             video.play();
             vidDropped = true;
+            output.allocate(video.getWidth(), video.getHeight());
+            
         } catch (exception e) {
             cout<<e.what()<<endl;
         }
