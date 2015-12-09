@@ -24,8 +24,17 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
-    ofVideoPlayer video;
-    ofxPanel gui;
+    void blur(float bluramt, ofVideoPlayer &vid, ofVec2f &vidPos);
+    
+    ofVideoPlayer   video;
+    ofVec2f         videoPos;
+    ofxPanel        gui;
+    
+    ofImage         image;
+    ofFbo           fboBlurOnePass;
+    ofShader        shaderBlurX;
+    ofFbo           fboBlurTwoPass;
+    ofShader        shaderBlurY;
     
     
     
@@ -34,6 +43,8 @@ class ofApp : public ofBaseApp{
     string greeting;
     string filepath;
     
+    ofParameter<bool> enableBlur;
+    ofParameter<float> bluramt;
     
     
 };

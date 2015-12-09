@@ -3,8 +3,15 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     
+    shaderBlurX.load("blurx.vert","blurx.frag");
+    shaderBlurY.load("blury.vert","blury.frag");
+    
     gui.setup();
+    gui.add(enableBlur.set("enable Blur",true));
+    gui.add(bluramt.set("blur amount", 0.0, 0.0, 5.0));
+    
     ofBackground(50);
+    videoPos = ofVec2f(gui.getWidth() + 20, 0);
     greeting = "Drag & Drop Video to Start";
     cout<<greeting.length()<<endl;
     
@@ -21,18 +28,63 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    video.draw(gui.getWidth() + 20, 0);
+    
     
     if (!vidDropped) {
         ofDrawBitmapString(greeting, 20, 20);
     }else{
+        if (enableBlur) {
+            blur(bluramt, video, videoPos);
+        }else{
+            video.draw(videoPos);
+        }
         gui.draw();
         ofDrawBitmapString("File Path: " + filepath, gui.getWidth() + 30, ofGetHeight() - 10);
         ofSetWindowShape(gui.getWidth() + video.getWidth() + 20, video.getHeight());
     }
+}
+//-------------------------------------------
+void ofApp::blur(float bluramt, ofVideoPlayer &vid, ofVec2f &vidPos){
+    
+    //image.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
+    
+    if (vid.isFrameNew()) {
+        image.setFromPixels(vid.getPixels());
+        
+        fboBlurOnePass.allocate(image.getWidth(), image.getHeight());
+        fboBlurTwoPass.allocate(image.getWidth(), image.getHeight());
+        
+        
+        
+        float blur = bluramt;
+        
+        // modified from oF blur tutorial
+        // horizonal pass
+        //----------------------------------------------------------
+        fboBlurOnePass.begin();
+        shaderBlurX.begin();
+        shaderBlurX.setUniform1f("blurAmnt", blur);
+        image.draw(0, 0);
+        shaderBlurX.end();
+        fboBlurOnePass.end();
+        
+        // vertical pass
+        //----------------------------------------------------------
+        fboBlurTwoPass.begin();
+        shaderBlurY.begin();
+        shaderBlurY.setUniform1f("blurAmnt", blur);
+        fboBlurOnePass.draw(0, 0);
+        shaderBlurY.end();
+        fboBlurTwoPass.end();
+        
+        //----------------------------------------------------------
+        ofSetColor(ofColor::white);
+        fboBlurTwoPass.draw(vidPos);
+    }
+    
+  
     
     
-
 }
 
 //--------------------------------------------------------------
