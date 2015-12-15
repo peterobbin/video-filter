@@ -24,8 +24,11 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
+    void rawOutput(ofVideoPlayer &vid, ofVec2f &vidPos);
     void blur(float bluramt, ofVideoPlayer &vid, ofVec2f &vidPos);
     void bw(float bwShift, ofVideoPlayer &vid, ofVec2f &vidPos);
+    
+    
     
     ofVideoPlayer   video;
     ofVec2f         videoPos;

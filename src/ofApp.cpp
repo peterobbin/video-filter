@@ -9,9 +9,9 @@ void ofApp::setup(){
     
     
     gui.setup();
-    gui.add(enableBlur.set("enable Blur",true));
+    gui.add(enableBlur.set("enable Blur",false));
     gui.add(bluramt.set("blur amount", 0.0, 0.0, 5.0));
-    gui.add(enableBW.set("enable B/W",true));
+    gui.add(enableBW.set("enable B/W",false));
     gui.add(bwShift.set("B/W shift", 0.0, -1.0, 1.0));
     
     ofBackground(50);
@@ -36,17 +36,17 @@ void ofApp::draw(){
     if (!vidDropped) {
         ofDrawBitmapString(greeting, 20, 20);
     }else{
-        video.draw(videoPos);
+        
+        rawOutput(video, videoPos);
+        
         if (enableBlur) {
             blur(bluramt, video, videoPos);
-           
         }
-        
         if (enableBW){
             bw(bwShift, video, videoPos);
         }
         
-         output.draw(videoPos);
+        output.draw(videoPos);
         
         
         gui.draw();
@@ -60,10 +60,9 @@ void ofApp::blur(float bluramt, ofVideoPlayer &vid, ofVec2f &vidPos){
     //image.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
     
     if (vid.isFrameNew()) {
-        image.setFromPixels(vid.getPixels());
         
-        fboBlurOnePass.allocate(image.getWidth(), image.getHeight());
-        fboBlurTwoPass.allocate(image.getWidth(), image.getHeight());
+        fboBlurOnePass.allocate(vid.getWidth(), vid.getHeight());
+        fboBlurTwoPass.allocate(vid.getWidth(), vid.getHeight());
         
         float blur = bluramt;
         
@@ -73,7 +72,7 @@ void ofApp::blur(float bluramt, ofVideoPlayer &vid, ofVec2f &vidPos){
         fboBlurOnePass.begin();
         shaderBlurX.begin();
         shaderBlurX.setUniform1f("blurAmnt", blur);
-        image.draw(0, 0);
+        output.draw(0, 0);
         shaderBlurX.end();
         fboBlurOnePass.end();
         
@@ -98,8 +97,7 @@ void ofApp::blur(float bluramt, ofVideoPlayer &vid, ofVec2f &vidPos){
 void ofApp::bw(float bwShift, ofVideoPlayer &vid, ofVec2f &vidPos){
      if (vid.isFrameNew()) {
          
-         image.grabScreen(vidPos.x, vidPos.y, vid.getWidth(), vid.getHeight());
-         bwPass.allocate(image.getWidth(), image.getHeight());
+         bwPass.allocate(vid.getWidth(), vid.getHeight());
          
          //----------------------------------------------------------
          bwPass.begin();
@@ -107,7 +105,7 @@ void ofApp::bw(float bwShift, ofVideoPlayer &vid, ofVec2f &vidPos){
          shaderBW.setUniform1f("u_bwshift", bwShift);
          shaderBW.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
          shaderBW.setUniform2f("u_tex0Resolution", image.getWidth(), image.getHeight());
-         output.draw(0, 0);
+         image.draw(0, 0);
          shaderBW.end();
          bwPass.end();
          //----------------------------------------------------------
@@ -116,6 +114,18 @@ void ofApp::bw(float bwShift, ofVideoPlayer &vid, ofVec2f &vidPos){
       
          
      }
+}
+
+//--------------------------------------------------------------
+void ofApp::rawOutput(ofVideoPlayer &vid, ofVec2f &vidPos){
+    if (vid.isFrameNew()) {
+        image.setFromPixels(vid.getPixels());
+        output.allocate(image.getWidth(), image.getHeight());
+        output.begin();
+        image.draw(0,0);
+        output.end();
+    }
+    
 }
 
 //--------------------------------------------------------------
