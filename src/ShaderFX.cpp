@@ -13,18 +13,18 @@ void ShaderFX::setup(){
     shaderBlurX.load("blurx.vert","blurx.frag");
     shaderBlurY.load("blury.vert","blury.frag");
     shaderBW.load("bw.vert", "bw.frag");
-    
+    shaderDistortion.load("distort.vert", "distort.frag");
+    //ofDisableArbTex();
 
 }
-
 
 void ShaderFX::update(){
+    // uncomment for live shader update
+    shaderBlurX.load("blurx.vert","blurx.frag");
+    shaderBlurY.load("blury.vert","blury.frag");
+    shaderBW.load("bw.vert", "bw.frag");
     
-}
-
-
-void ShaderFX::draw(){
-    
+    shaderDistortion.load("distort.vert", "distort.frag");
 }
 
 
@@ -73,6 +73,27 @@ void ShaderFX::bw(float bwShift, ofFbo &output){
         shaderBW.end();
         output.end();
 
+}
+
+void ShaderFX::distortion(ofFbo &output){
+    
+    ofFbo distortFX;
+    distortFX.allocate(output.getWidth(), output.getHeight());
+    distortFX.begin();
+    
+    shaderDistortion.begin();
+    //shaderDistortion.setUniformTexture("tex0", output.getTexture(), 0);
+    shaderDistortion.setUniform1f("u_time", ofGetElapsedTimef());
+    shaderDistortion.setUniform2f("u_mouse", ofGetMouseX(), ofGetMouseY());
+    shaderDistortion.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
+    shaderDistortion.setUniform2f("u_tex0Resolution", output.getWidth(), output.getHeight());
+    output.draw(0, 0);
+
+    shaderDistortion.end();
+    distortFX.end();
+    //cout<<ofGetElapsedTimef()<<endl;
+    
+    output = distortFX;
 }
 
 void ShaderFX::rawOutput(ofVideoPlayer &vid, ofFbo &output){

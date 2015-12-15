@@ -13,16 +13,18 @@ class ShaderFX{
 public:
     void setup();
     void update();
-    void draw();
     
     void rawOutput(ofVideoPlayer &vid, ofFbo &output);
     void blur(float bluramt, ofFbo &output);
     void bw(float bwShift, ofFbo &output);
-
+    void distortion(ofFbo &output);
+    
+    ofTexture texture;
     
     ofShader        shaderBlurX;
     ofShader        shaderBlurY;
     ofShader        shaderBW;
+    ofShader        shaderDistortion;
     
     ofFbo           processOutput;
 

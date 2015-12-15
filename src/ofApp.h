@@ -46,6 +46,6 @@ class ofApp : public ofBaseApp{
     ofParameter<float> bluramt;
     ofParameter<bool> enableBW;
     ofParameter<float> bwShift;
-    
+    ofParameter<bool> enableDistort;
     
 };

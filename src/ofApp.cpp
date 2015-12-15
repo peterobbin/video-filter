@@ -10,6 +10,7 @@ void ofApp::setup(){
     gui.add(bluramt.set("blur amount", 0.0, 0.0, 5.0));
     gui.add(enableBW.set("enable B/W",false));
     gui.add(bwShift.set("B/W shift", 0.0, -1.0, 1.0));
+    gui.add(enableDistort.set("enable distortion",false));
     
     ofBackground(50);
     videoPos = ofVec2f(gui.getWidth() + 20, 0);
@@ -26,6 +27,7 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
     video.update();
+    effects.update();
 
 }
 
@@ -45,8 +47,11 @@ void ofApp::draw(){
         if (enableBW){
             effects.bw(bwShift, output);
         }
+        if (enableDistort){
+            effects.distortion(output);
+        }
         
-       output.draw(videoPos);
+        output.draw(videoPos);
         gui.draw();
         ofDrawBitmapString("File Path: " + filepath, gui.getWidth() + 30, ofGetHeight() - 10);
         ofSetWindowShape(gui.getWidth() + video.getWidth() + 20, video.getHeight());
