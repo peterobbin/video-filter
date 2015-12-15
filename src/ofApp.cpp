@@ -3,10 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     
-    shaderBlurX.load("blurx.vert","blurx.frag");
-    shaderBlurY.load("blury.vert","blury.frag");
-    shaderBW.load("bw.vert", "bw.frag");
-    
+
     
     gui.setup();
     gui.add(enableBlur.set("enable Blur",false));
@@ -21,12 +18,15 @@ void ofApp::setup(){
     ofSetWindowShape(8 * greeting.length() + 40, 13.6 + 40);
     ofSetWindowPosition(ofGetScreenWidth() / 2 - ofGetWidth()/2, ofGetScreenHeight()/2 - ofGetHeight());
 
+    
+    effects.setup();
 
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
     video.update();
+
 }
 
 //--------------------------------------------------------------
@@ -37,95 +37,22 @@ void ofApp::draw(){
         ofDrawBitmapString(greeting, 20, 20);
     }else{
         
-        rawOutput(video, videoPos);
+        effects.rawOutput(video, videoPos, output);
         
         if (enableBlur) {
-            blur(bluramt, video, videoPos);
+            effects.blur(bluramt, video, videoPos, output);
         }
         if (enableBW){
-            bw(bwShift, video, videoPos);
+            effects.bw(bwShift, video, videoPos, output);
         }
         
-        output.draw(videoPos);
-        
-        
+       output.draw(videoPos);
         gui.draw();
         ofDrawBitmapString("File Path: " + filepath, gui.getWidth() + 30, ofGetHeight() - 10);
         ofSetWindowShape(gui.getWidth() + video.getWidth() + 20, video.getHeight());
     }
 }
-//-------------------------------------------
-void ofApp::blur(float bluramt, ofVideoPlayer &vid, ofVec2f &vidPos){
-    
-    //image.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
-    
-    if (vid.isFrameNew()) {
-        
-        ofFbo           fboBlurOnePass;
-        ofFbo           fboBlurTwoPass;
-        
-        fboBlurOnePass.allocate(vid.getWidth(), vid.getHeight());
-        fboBlurTwoPass.allocate(vid.getWidth(), vid.getHeight());
-        
-        float blur = bluramt;
-        
-        // modified from oF blur tutorial
-        // horizonal pass
-        //----------------------------------------------------------
-        fboBlurOnePass.begin();
-        shaderBlurX.begin();
-        shaderBlurX.setUniform1f("blurAmnt", blur);
-        output.draw(0, 0);
-        shaderBlurX.end();
-        fboBlurOnePass.end();
-        
-        // vertical pass
-        //----------------------------------------------------------
-        fboBlurTwoPass.begin();
-        shaderBlurY.begin();
-        shaderBlurY.setUniform1f("blurAmnt", blur);
-        fboBlurOnePass.draw(0, 0);
-        shaderBlurY.end();
-        fboBlurTwoPass.end();
-        
-        //----------------------------------------------------------
-        ofSetColor(ofColor::white);
-        //fboBlurTwoPass.draw(vidPos);
-        output = fboBlurTwoPass;
-    }
-}
 
-//--------------------------------------------------------------
-
-void ofApp::bw(float bwShift, ofVideoPlayer &vid, ofVec2f &vidPos){
-     if (vid.isFrameNew()) {
-         
-         //----------------------------------------------------------
-         output.begin();
-         shaderBW.begin();
-         shaderBW.setUniform1f("u_bwshift", bwShift);
-         shaderBW.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
-         shaderBW.setUniform2f("u_tex0Resolution", vid.getWidth(), vid.getHeight());
-         output.draw(0, 0);
-         shaderBW.end();
-         output.end();
-         //----------------------------------------------------------
-         ofSetColor(ofColor::white);
-         
-         
-     }
-}
-
-//--------------------------------------------------------------
-void ofApp::rawOutput(ofVideoPlayer &vid, ofVec2f &vidPos){
-    if (vid.isFrameNew()) {
-        output.allocate(vid.getWidth(), vid.getHeight());
-        output.begin();
-        vid.draw(0,0);
-        output.end();
-    }
-    
-}
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
@@ -193,6 +120,4 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
         }
         
     }
-
-   
 }

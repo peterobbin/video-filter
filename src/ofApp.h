@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxGui.h"
+#include "ShaderFX.hpp"
 
 
 
@@ -24,23 +25,17 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
     
-    void rawOutput(ofVideoPlayer &vid, ofVec2f &vidPos);
-    void blur(float bluramt, ofVideoPlayer &vid, ofVec2f &vidPos);
-    void bw(float bwShift, ofVideoPlayer &vid, ofVec2f &vidPos);
-    
+
+    ShaderFX effects;
     
     
     ofVideoPlayer   video;
     ofVec2f         videoPos;
     ofxPanel        gui;
     
-    
-    ofShader        shaderBlurX;
-    ofShader        shaderBlurY;
-    
-    ofShader        shaderBW;
-    
     ofFbo           output;
+    
+
     
     float videoAspectRatio;
     bool vidDropped;
