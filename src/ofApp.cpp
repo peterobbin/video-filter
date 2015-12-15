@@ -37,13 +37,13 @@ void ofApp::draw(){
         ofDrawBitmapString(greeting, 20, 20);
     }else{
         
-        effects.rawOutput(video, videoPos, output);
+        effects.rawOutput(video, output);
         
         if (enableBlur) {
-            effects.blur(bluramt, video, videoPos, output);
+            effects.blur(bluramt, output);
         }
         if (enableBW){
-            effects.bw(bwShift, video, videoPos, output);
+            effects.bw(bwShift, output);
         }
         
        output.draw(videoPos);

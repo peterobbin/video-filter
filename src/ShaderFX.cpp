@@ -28,17 +28,14 @@ void ShaderFX::draw(){
 }
 
 
-void ShaderFX::blur(float bluramt, ofVideoPlayer &vid, ofVec2f &vidPos, ofFbo &output){
+void ShaderFX::blur(float bluramt, ofFbo &output){
     
-    //image.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
-    
-    if (vid.isFrameNew()) {
+        ofFbo fboBlurOnePass;
+        ofFbo fboBlurTwoPass;
         
-        ofFbo           fboBlurOnePass;
-        ofFbo           fboBlurTwoPass;
-        
-        fboBlurOnePass.allocate(vid.getWidth(), vid.getHeight());
-        fboBlurTwoPass.allocate(vid.getWidth(), vid.getHeight());
+        fboBlurOnePass.allocate(output.getWidth(), output.getHeight());
+        fboBlurTwoPass.allocate(output.getWidth(), output.getHeight());
+
         
         float blur = bluramt;
 
@@ -63,29 +60,23 @@ void ShaderFX::blur(float bluramt, ofVideoPlayer &vid, ofVec2f &vidPos, ofFbo &o
         //----------------------------------------------------------
         
         output = fboBlurTwoPass;
-    }
 }
 
 
-void ShaderFX::bw(float bwShift, ofVideoPlayer &vid, ofVec2f &vidPos, ofFbo &output){
-    if (vid.isFrameNew()) {
-
+void ShaderFX::bw(float bwShift, ofFbo &output){
         output.begin();
         shaderBW.begin();
         shaderBW.setUniform1f("u_bwshift", bwShift);
         shaderBW.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
-        shaderBW.setUniform2f("u_tex0Resolution", vid.getWidth(), vid.getHeight());
+        shaderBW.setUniform2f("u_tex0Resolution", output.getWidth(), output.getHeight());
         output.draw(0, 0);
         shaderBW.end();
         output.end();
-        
-        
-    }
+
 }
 
-void ShaderFX::rawOutput(ofVideoPlayer &vid, ofVec2f &vidPos, ofFbo &output){
+void ShaderFX::rawOutput(ofVideoPlayer &vid, ofFbo &output){
     if (vid.isFrameNew()) {
-        output.allocate(vid.getWidth(), vid.getHeight());
         output.begin();
         vid.draw(0,0);
         output.end();

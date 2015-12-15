@@ -15,9 +15,9 @@ public:
     void update();
     void draw();
     
-    void rawOutput(ofVideoPlayer &vid, ofVec2f &vidPos, ofFbo &output);
-    void blur(float bluramt, ofVideoPlayer &vid, ofVec2f &vidPos, ofFbo &output);
-    void bw(float bwShift, ofVideoPlayer &vid, ofVec2f &vidPos, ofFbo &output);
+    void rawOutput(ofVideoPlayer &vid, ofFbo &output);
+    void blur(float bluramt, ofFbo &output);
+    void bw(float bwShift, ofFbo &output);
 
     
     ofShader        shaderBlurX;
