@@ -34,14 +34,11 @@ class ofApp : public ofBaseApp{
     ofVec2f         videoPos;
     ofxPanel        gui;
     
-    ofImage         image;
-    ofFbo           fboBlurOnePass;
+    
     ofShader        shaderBlurX;
-    ofFbo           fboBlurTwoPass;
     ofShader        shaderBlurY;
     
     ofShader        shaderBW;
-    ofFbo           bwPass;
     
     ofFbo           output;
     
