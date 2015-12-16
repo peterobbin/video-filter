@@ -19,7 +19,7 @@ public:
     void blur(float bluramt, ofFbo &output);
     void bw(float bwShift, ofFbo &output);
     void distortion(ofFbo &output);
-    void faceWarp(ofFbo &output , bool useCam, ofVec2f &nosePos, ofVec2f &vidPos);
+    void faceWarp(ofFbo &output , bool useCam, ofVec2f &nosePos, ofVec2f &vidPos, float warpAmt);
     void mixVid(ofVideoPlayer &vid2, ofFbo &output, ofFbo &output2, int mode, float opacity, bool swap);
     
     ofTexture texture;

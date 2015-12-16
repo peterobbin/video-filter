@@ -3,7 +3,30 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     
+    sampleRate = 44100;
+    channels = 2;
+    
+    ofSetFrameRate(60);
     ofSetVerticalSync(true);
+    
+    fileName = "testMovie";
+    fileExt = ".mov"; // ffmpeg uses the extension to determine the container type. run 'ffmpeg -formats' to see supported formats
+    
+    // override the default codecs if you like
+    // run 'ffmpeg -codecs' to find out what your implementation supports (or -formats on some older versions)
+    vidRecorder.setVideoCodec("mpeg4");
+    vidRecorder.setVideoBitrate("800k");
+    vidRecorder.setAudioCodec("mp3");
+    vidRecorder.setAudioBitrate("192k");
+    ofAddListener(vidRecorder.outputFileCompleteEvent, this, &ofApp::recordingComplete);
+    
+    //    soundStream.listDevices();
+    //    soundStream.setDeviceID(11);
+    soundStream.setup(this, 0, channels, sampleRate, 256, 4);
+    bRecording = false;
+    ofEnableAlphaBlending();
+
+    
     
     gui.setup();
     gui.add(useWebCam.set("use WebCam", false));
@@ -13,6 +36,7 @@ void ofApp::setup(){
     gui.add(bwShift.set("B/W shift", 0.0, -1.0, 1.0));
     gui.add(enableDistort.set("enable distortion",false));
     gui.add(enableWarp.set("enable warp", false));
+    gui.add(warpAmt.set("warp intensity", 1.0, 0.0, 6.0));
     gui.add(enableMix.set("enable mix", false));
     gui.add(swapVid.set("swap video", false));
     gui.add(mixMode.set("mix mode", 0, 0, 2));
@@ -50,6 +74,25 @@ void ofApp::update(){
     }else{
         cam.close();
     }
+    
+    if(bRecording){
+        ofImage image;
+        image.grabScreen(gui.getWidth() + 20, 0, video.getWidth(), video.getHeight());
+        bool success = vidRecorder.addFrame(image.getPixels());
+        if (!success) {
+            ofLogWarning("This frame was not added!");
+        }
+    }
+    
+    
+    // Check if the video recorder encountered any error while writing video frame or audio smaples.
+    if (vidRecorder.hasVideoError()) {
+        ofLogWarning("The video recorder failed to write some frames!");
+    }
+    
+    if (vidRecorder.hasAudioError()) {
+        ofLogWarning("The video recorder failed to write some audio samples!");
+    }
 
 }
 
@@ -63,6 +106,16 @@ void ofApp::draw(){
         ofDrawBitmapString(greeting, 20, 20);
         ofDrawBitmapString(altGreeting, 20, 35);
     }else{
+        
+//        if (useWebCam) {
+//            video.stop();
+//            output.allocate(cam.camWidth, cam.camHeight);
+//            effects.rawOutput(cam.vidGrabber, output);
+//        }else{
+//            video.play();
+//            output.allocate(video.getWidth(), video.getHeight());
+//            effects.rawOutput(video, output);
+//        }
         
         if (useWebCam) {
             video.stop();
@@ -96,7 +149,7 @@ void ofApp::draw(){
         }
         
         if (enableWarp) {
-            effects.faceWarp(output, useWebCam, cam.nosePos, videoPos);
+            effects.faceWarp(output, useWebCam, cam.nosePos, videoPos, warpAmt);
         }
 
         
@@ -104,7 +157,8 @@ void ofApp::draw(){
         // if (useWebCam)cam.draw(videoPos);
         
         gui.draw();
-        
+        ofDrawBitmapString("press r to record", 10, ofGetHeight() - 20);
+        ofDrawBitmapString("press s to stop", 10, ofGetHeight() - 10);
         if (!useWebCam) {
             ofSetWindowShape(gui.getWidth() + video.getWidth() + 20, video.getHeight());
             ofDrawBitmapString("File Path: " + filepath, gui.getWidth() + 30, ofGetHeight() - 10);
@@ -114,6 +168,22 @@ void ofApp::draw(){
             
         }
     }
+    
+    if(bRecording){
+        ofSetColor(255, 0, 0);
+        ofDrawCircle(ofGetWidth() - 20, 20, 5);
+        ofSetColor(255, 255, 255);
+    }
+}
+//--------------------------------------------------------------
+void ofApp::audioIn(float *input, int bufferSize, int nChannels){
+    if(bRecording)
+        vidRecorder.addAudioSamples(input, bufferSize, nChannels);
+}
+
+//--------------------------------------------------------------
+void ofApp::recordingComplete(ofxVideoRecorderOutputFileCompleteEventArgs& args){
+    cout << "The recoded video file is now complete." << endl;
 }
 
 
@@ -125,6 +195,27 @@ void ofApp::keyPressed(int key){
                 useWebCam = true;
                 vidDropped = true;
             }
+            break;
+            
+        case 'r':
+            bRecording = !bRecording;
+            if(bRecording) {
+                vidRecorder.setup(fileName+ofGetTimestampString()+fileExt, video.getWidth(), video.getHeight(), 30, sampleRate, channels);
+                
+                // Start recording
+                vidRecorder.start();
+            }
+            else if(!bRecording && vidRecorder.isInitialized()) {
+                vidRecorder.setPaused(true);
+            }
+            else if(bRecording && vidRecorder.isInitialized()) {
+                vidRecorder.setPaused(false);
+            }
+            break;
+            
+        case 'c':
+            bRecording = false;
+            vidRecorder.close();
             break;
        
         default:
@@ -223,4 +314,10 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
         }
         
     }
+}
+
+//--------------------------------------------------------------
+void ofApp::exit(){
+    ofRemoveListener(vidRecorder.outputFileCompleteEvent, this, &ofApp::recordingComplete);
+    vidRecorder.close();
 }

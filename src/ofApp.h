@@ -4,6 +4,7 @@
 #include "ofxGui.h"
 #include "ShaderFX.hpp"
 #include "WebCam.hpp"
+#include "ofxVideoRecorder.h"
 
 
 
@@ -13,6 +14,7 @@ class ofApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
+        void exit();
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -25,6 +27,8 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+    
+    void audioIn(float * input, int bufferSize, int nChannels);
     
 
     ShaderFX effects;
@@ -56,10 +60,26 @@ class ofApp : public ofBaseApp{
     ofParameter<float> bwShift;
     ofParameter<bool> enableDistort;
     ofParameter<bool> enableWarp;
+    ofParameter<float> warpAmt;
     ofParameter<bool> enableMix;
     ofParameter<bool> swapVid;
     ofParameter<int> mixMode;
     ofParameter<float> mixOpacity;
+    
+    
+    // implementing ofxvideorecorder, will clean up later
+    ofxVideoRecorder    vidRecorder;
+    ofSoundStream       soundStream;
+    bool bRecording;
+    int sampleRate;
+    int channels;
+    string fileName;
+    string fileExt;
+    
+    void recordingComplete(ofxVideoRecorderOutputFileCompleteEventArgs& args);
+    
+    ofFbo recordFbo;
+    ofPixels recordPixels;
    
     
 };

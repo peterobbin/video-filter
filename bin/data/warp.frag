@@ -1,6 +1,7 @@
 uniform sampler2DRect tex0;
 uniform vec2 u_resolution;
 uniform float u_time;
+uniform float u_amount;
 uniform vec2 u_mouse;
 uniform vec2 u_tex0Resolution;
 varying vec2 texCoordVarying;
@@ -46,7 +47,7 @@ void main(){
     vec4 color;
 
     float pct = 0.0;
-    pct = 1. - distance(storigin,mouse + 0.0) * 1.0;
+    pct = 1. - distance(storigin,mouse + 0.0) * u_amount;
   
      float offset = 0.5 ;
      float angle = noise( storigin  + u_time)*PI ;

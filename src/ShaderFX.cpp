@@ -102,7 +102,7 @@ void ShaderFX::distortion(ofFbo &output){
 }
 
 
-void ShaderFX::faceWarp(ofFbo &output, bool useCam, ofVec2f &nosePos, ofVec2f &vidPos){
+void ShaderFX::faceWarp(ofFbo &output, bool useCam, ofVec2f &nosePos, ofVec2f &vidPos, float warpAmt){
     ofFbo warpFX;
     warpFX.allocate(output.getWidth(), output.getHeight());
     warpFX.begin();
@@ -113,14 +113,13 @@ void ShaderFX::faceWarp(ofFbo &output, bool useCam, ofVec2f &nosePos, ofVec2f &v
     if (useCam){
         mousePos = nosePos;
     }else{
+       // mousePos = ofVec2f(ofGetMouseX(), ofGetMouseY());
         mousePos = ofVec2f(ofGetMouseX() - vidPos.x, ofGetMouseY());
-        
-        
-    
     }
     
     shaderWarp.begin();
     shaderWarp.setUniform1f("u_time", ofGetElapsedTimef());
+    shaderWarp.setUniform1f("u_amount", warpAmt);
     shaderWarp.setUniform2f("u_mouse", mousePos.x, mousePos.y);
     shaderWarp.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
     shaderWarp.setUniform2f("u_tex0Resolution", output.getWidth(), output.getHeight());
