@@ -99,7 +99,7 @@ void ShaderFX::distortion(ofFbo &output){
 
 }
 
-void ShaderFX::mixVid(ofVideoPlayer &vid2, ofFbo &output, ofFbo &output2){
+void ShaderFX::mixVid(ofVideoPlayer &vid2, ofFbo &output, ofFbo &output2, int mode, float opacity){
     if (vid2.isFrameNew()) {
         
         output2.begin();
@@ -124,6 +124,8 @@ void ShaderFX::mixVid(ofVideoPlayer &vid2, ofFbo &output, ofFbo &output2){
         shaderMix.begin();
         shaderMix.setUniformTexture("u_tex0", output.getTexture(), 0);
         shaderMix.setUniformTexture("u_tex1", vid2.getTexture(), 1);
+        shaderMix.setUniform1f("u_opacity", opacity);
+        shaderMix.setUniform1i("u_mode", mode);
         shaderMix.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
         shaderMix.setUniform2f("u_tex0Resolution", output.getWidth(), output.getHeight());
         output.draw(0,0);

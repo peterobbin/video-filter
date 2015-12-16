@@ -52,5 +52,7 @@ class ofApp : public ofBaseApp{
     ofParameter<float> bwShift;
     ofParameter<bool> enableDistort;
     ofParameter<bool> enableMix;
+    ofParameter<int> mixMode;
+    ofParameter<float> mixOpacity;
     
 };

@@ -3,6 +3,8 @@ uniform sampler2DRect u_tex0;
 uniform sampler2DRect u_tex1;
 uniform vec2 u_resolution;
 uniform vec2 u_tex0Resolution;
+uniform int u_mode;
+uniform float u_opacity;
 varying vec2 texCoordVarying;
 
 vec4 average(vec4 c){
@@ -56,7 +58,19 @@ void main(){
     vec4 color1 = texture2DRect(u_tex1, texCoordVarying);
     vec4 color2 = texture2DRect(u_tex0, texCoordVarying);
 
-    vec3 mixcolor = blendScreen(color1.rgb, color2.rgb, 1.0);
+    vec3 mixcolor = vec3(1.0);
+    if (u_mode == 0){
+        mixcolor = blendScreen(color1.rgb, color2.rgb, u_opacity);
+    }
+
+    if (u_mode == 1){
+        mixcolor = blendMultiply(color1.rgb, color2.rgb, u_opacity);
+    }
+
+    if (u_mode == 2){
+        mixcolor = blendAdd(color1.rgb, color2.rgb, u_opacity);
+    }
+
 
     color = vec4(mixcolor.r, mixcolor.g, mixcolor.b, 1.0);
     //color = texture2DRect(u_tex1, texCoordVarying);

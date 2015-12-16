@@ -12,6 +12,8 @@ void ofApp::setup(){
     gui.add(bwShift.set("B/W shift", 0.0, -1.0, 1.0));
     gui.add(enableDistort.set("enable distortion",false));
     gui.add(enableMix.set("enable mix", false));
+    gui.add(mixMode.set("mix mode", 0, 0, 2));
+    gui.add(mixOpacity.set("mix opacity", 1.0, 0 ,1.0));
     
     ofBackground(50);
     videoPos = ofVec2f(gui.getWidth() + 20, 0);
@@ -44,7 +46,7 @@ void ofApp::draw(){
         
         effects.rawOutput(video, output);
         if (twoVideos && enableMix){
-            effects.mixVid(video2, output, output2);
+            effects.mixVid(video2, output, output2, mixMode, mixOpacity);
         }
         
         if (enableBlur) {
