@@ -96,7 +96,7 @@ void ofApp::draw(){
         }
         
         if (enableWarp) {
-            effects.faceWarp(output, useWebCam, cam.nosePos);
+            effects.faceWarp(output, useWebCam, cam.nosePos, videoPos);
         }
 
         
@@ -187,6 +187,7 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
     if (dragInfo.files.size() > 0  &&  dragInfo.files.size() < 2) {
         filepath = dragInfo.files[0];
         try {
+            useWebCam = false;
             video.load(filepath);
             videoAspectRatio = video.getWidth()/video.getHeight();
             video.play();
@@ -206,6 +207,7 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
         filepath = dragInfo.files[0];
         filepath2 = dragInfo.files[1];
         try {
+            useWebCam = false;
             video.load(filepath);
             video2.load(filepath2);
             videoAspectRatio = video.getWidth()/video.getHeight();
