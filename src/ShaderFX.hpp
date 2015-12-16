@@ -18,6 +18,7 @@ public:
     void blur(float bluramt, ofFbo &output);
     void bw(float bwShift, ofFbo &output);
     void distortion(ofFbo &output);
+    void mixVid(ofVideoPlayer &vid2, ofFbo &output, ofFbo &output2);
     
     ofTexture texture;
     
@@ -25,6 +26,7 @@ public:
     ofShader        shaderBlurY;
     ofShader        shaderBW;
     ofShader        shaderDistortion;
+    ofShader        shaderMix;
     
     ofFbo           processOutput;
 

@@ -30,22 +30,27 @@ class ofApp : public ofBaseApp{
     
     
     ofVideoPlayer   video;
+    ofVideoPlayer   video2;
     ofVec2f         videoPos;
     ofxPanel        gui;
     
     ofFbo           output;
+    ofFbo           output2;
     
 
     
     float videoAspectRatio;
     bool vidDropped;
+    bool twoVideos;
     string greeting;
     string filepath;
+    string filepath2;
     
     ofParameter<bool> enableBlur;
     ofParameter<float> bluramt;
     ofParameter<bool> enableBW;
     ofParameter<float> bwShift;
     ofParameter<bool> enableDistort;
+    ofParameter<bool> enableMix;
     
 };

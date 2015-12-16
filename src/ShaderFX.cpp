@@ -14,6 +14,7 @@ void ShaderFX::setup(){
     shaderBlurY.load("blury.vert","blury.frag");
     shaderBW.load("bw.vert", "bw.frag");
     shaderDistortion.load("distort.vert", "distort.frag");
+    shaderMix.load("mix.vert", "mix.frag");
     //ofDisableArbTex();
 
 }
@@ -23,7 +24,7 @@ void ShaderFX::update(){
     shaderBlurX.load("blurx.vert","blurx.frag");
     shaderBlurY.load("blury.vert","blury.frag");
     shaderBW.load("bw.vert", "bw.frag");
-    
+    shaderMix.load("mix.vert", "mix.frag");
     shaderDistortion.load("distort.vert", "distort.frag");
 }
 
@@ -96,6 +97,48 @@ void ShaderFX::distortion(ofFbo &output){
     
     output = distortFX;
 
+}
+
+void ShaderFX::mixVid(ofVideoPlayer &vid2, ofFbo &output, ofFbo &output2){
+    if (vid2.isFrameNew()) {
+        
+        output2.begin();
+        vid2.draw(0, 0);
+        output2.end();
+        
+        glActiveTextureARB(GL_TEXTURE0_ARB);
+        
+        output.getTexture().bind();
+        
+        glActiveTextureARB(GL_TEXTURE1_ARB);
+        output2.getTexture().bind();
+        
+        
+        
+        ofFbo mixFX;
+        ofFbo mixFX2;
+        mixFX.allocate(output.getWidth(), output.getHeight());
+        mixFX2.allocate(output.getWidth(), output.getHeight());
+        
+        mixFX.begin();
+        shaderMix.begin();
+        shaderMix.setUniformTexture("u_tex0", output.getTexture(), 0);
+        shaderMix.setUniformTexture("u_tex1", vid2.getTexture(), 1);
+        shaderMix.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
+        shaderMix.setUniform2f("u_tex0Resolution", output.getWidth(), output.getHeight());
+        output.draw(0,0);
+        shaderMix.end();
+        mixFX.end();
+        output = mixFX;
+        
+        glActiveTextureARB(GL_TEXTURE0_ARB);
+        
+        output.getTexture().unbind();
+        
+        glActiveTextureARB(GL_TEXTURE1_ARB);
+        output2.getTexture().unbind();
+    }
+    
 }
 
 void ShaderFX::rawOutput(ofVideoPlayer &vid, ofFbo &output){
