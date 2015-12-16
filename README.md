@@ -5,16 +5,16 @@ This openFramework based app is intend to do realtime video effects. The final g
 Call ShaderEffects class to add effects. 
 In order to add effects, an ofFbo object is required to process the video.
 
-## Feature
+## Features
 - Realtime Effects
 - Different filters 
 - Easy drag & drop integration 
+- Video Mixer
+- Blending Settings
 
 ## TODO
-- Video Mixer
 - Record and export
 - Face tracking
-- Depth Camera Integration
 - Adding previous effects from of-light-fx
 
 ## Possible Effects:
@@ -23,5 +23,6 @@ In order to add effects, an ofFbo object is required to process the video.
 - Lens Effects (calculating brightest pixels)
 - Depth Blur for Kinect Image
 - Face Block?
+-  Depth Camera Integration
 
 

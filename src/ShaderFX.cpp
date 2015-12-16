@@ -99,8 +99,17 @@ void ShaderFX::distortion(ofFbo &output){
 
 }
 
-void ShaderFX::mixVid(ofVideoPlayer &vid2, ofFbo &output, ofFbo &output2, int mode, float opacity){
+void ShaderFX::mixVid(ofVideoPlayer &vid2, ofFbo &output, ofFbo &output2, int mode, float opacity, bool swap){
     if (vid2.isFrameNew()) {
+        
+        
+        int swapMode = 0;
+        
+        if (swap) {
+            swapMode = 0;
+        }else{
+            swapMode = 1;
+        }
         
         output2.begin();
         vid2.draw(0, 0);
@@ -112,8 +121,7 @@ void ShaderFX::mixVid(ofVideoPlayer &vid2, ofFbo &output, ofFbo &output2, int mo
         
         glActiveTextureARB(GL_TEXTURE1_ARB);
         output2.getTexture().bind();
-        
-        
+
         
         ofFbo mixFX;
         ofFbo mixFX2;
@@ -126,6 +134,7 @@ void ShaderFX::mixVid(ofVideoPlayer &vid2, ofFbo &output, ofFbo &output2, int mo
         shaderMix.setUniformTexture("u_tex1", vid2.getTexture(), 1);
         shaderMix.setUniform1f("u_opacity", opacity);
         shaderMix.setUniform1i("u_mode", mode);
+        shaderMix.setUniform1i("u_swap", swapMode);
         shaderMix.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
         shaderMix.setUniform2f("u_tex0Resolution", output.getWidth(), output.getHeight());
         output.draw(0,0);
@@ -147,6 +156,16 @@ void ShaderFX::rawOutput(ofVideoPlayer &vid, ofFbo &output){
     if (vid.isFrameNew()) {
         output.begin();
         vid.draw(0,0);
+        output.end();
+        processOutput = output;
+    }
+    
+}
+
+void ShaderFX::rawOutput(ofVideoGrabber &vidGrabber, ofFbo &output){
+    if (vidGrabber.isFrameNew()) {
+        output.begin();
+        vidGrabber.draw(0,0);
         output.end();
         processOutput = output;
     }

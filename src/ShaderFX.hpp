@@ -15,10 +15,11 @@ public:
     void update();
     
     void rawOutput(ofVideoPlayer &vid, ofFbo &output);
+    void rawOutput(ofVideoGrabber &vidGrabber, ofFbo &output);
     void blur(float bluramt, ofFbo &output);
     void bw(float bwShift, ofFbo &output);
     void distortion(ofFbo &output);
-    void mixVid(ofVideoPlayer &vid2, ofFbo &output, ofFbo &output2, int mode, float opacity);
+    void mixVid(ofVideoPlayer &vid2, ofFbo &output, ofFbo &output2, int mode, float opacity, bool swap);
     
     ofTexture texture;
     

@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ofxGui.h"
 #include "ShaderFX.hpp"
+#include "WebCam.hpp"
 
 
 
@@ -27,6 +28,7 @@ class ofApp : public ofBaseApp{
     
 
     ShaderFX effects;
+    WebCam cam;
     
     
     ofVideoPlayer   video;
@@ -46,13 +48,16 @@ class ofApp : public ofBaseApp{
     string filepath;
     string filepath2;
     
+    ofParameter<bool> useWebCam;
     ofParameter<bool> enableBlur;
     ofParameter<float> bluramt;
     ofParameter<bool> enableBW;
     ofParameter<float> bwShift;
     ofParameter<bool> enableDistort;
     ofParameter<bool> enableMix;
+    ofParameter<bool> swapVid;
     ofParameter<int> mixMode;
     ofParameter<float> mixOpacity;
+   
     
 };

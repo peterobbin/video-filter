@@ -4,6 +4,7 @@ uniform sampler2DRect u_tex1;
 uniform vec2 u_resolution;
 uniform vec2 u_tex0Resolution;
 uniform int u_mode;
+uniform int u_swap;
 uniform float u_opacity;
 varying vec2 texCoordVarying;
 
@@ -55,8 +56,19 @@ void main(){
     vec4 color = vec4(1.0);
     
     //texCoordVarying.x += 0.5;
-    vec4 color1 = texture2DRect(u_tex1, texCoordVarying);
-    vec4 color2 = texture2DRect(u_tex0, texCoordVarying);
+
+    vec4 color1 = vec4(1.0);
+    vec4 color2 = vec4(1.0);
+
+    if  (u_swap == 0){
+        color1 = texture2DRect(u_tex1, texCoordVarying);
+        color2 = texture2DRect(u_tex0, texCoordVarying);
+    }
+
+    if  (u_swap == 1){
+        color1 = texture2DRect(u_tex0, texCoordVarying);
+        color2 = texture2DRect(u_tex1, texCoordVarying);
+    }
 
     vec3 mixcolor = vec3(1.0);
     if (u_mode == 0){

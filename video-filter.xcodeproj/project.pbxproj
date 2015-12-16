@@ -12,6 +12,7 @@
 		1D5F3298C2FA073628012944 /* ofxCvContourFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C76DE5C29BDBD2CAA1DD0021 /* ofxCvContourFinder.cpp */; };
 		250A95BA26587BE85DB0A353 /* ofxCvColorImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE9C7160245B19131DAE6128 /* ofxCvColorImage.cpp */; };
 		2D81A5AC1C1FE0AF000F0644 /* ShaderFX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2D81A5AA1C1FE0AF000F0644 /* ShaderFX.cpp */; };
+		2DD8E87E1C21578B00E82A21 /* WebCam.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2DD8E87C1C21578B00E82A21 /* WebCam.cpp */; };
 		483908258D00B98B4BE69F07 /* ofxLabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 78D67A00EB899FAC09430597 /* ofxLabel.cpp */; };
 		5CBB2AB3A60F65431D7B555D /* ofxButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C88333E71C9457E441C33474 /* ofxButton.cpp */; };
 		63020F16C7E8DED980111241 /* ofxCvImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C6151136D101F857DAE12722 /* ofxCvImage.cpp */; };
@@ -91,6 +92,8 @@
 		2B75A06D9EF1817256BA26F6 /* type_traits_detail.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = type_traits_detail.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/gpu/device/detail/type_traits_detail.hpp; sourceTree = SOURCE_ROOT; };
 		2D81A5AA1C1FE0AF000F0644 /* ShaderFX.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShaderFX.cpp; sourceTree = "<group>"; };
 		2D81A5AB1C1FE0AF000F0644 /* ShaderFX.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ShaderFX.hpp; sourceTree = "<group>"; };
+		2DD8E87C1C21578B00E82A21 /* WebCam.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WebCam.cpp; sourceTree = "<group>"; };
+		2DD8E87D1C21578B00E82A21 /* WebCam.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = WebCam.hpp; sourceTree = "<group>"; };
 		2E411F99E3AB7154484B4F96 /* kmeans_index.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = kmeans_index.h; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/flann/kmeans_index.h; sourceTree = SOURCE_ROOT; };
 		30884ECD9C171AB1B1BDFC3F /* cv.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = cv.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv/cv.hpp; sourceTree = SOURCE_ROOT; };
 		311F65A208008448840A0A42 /* opengl_interop_deprecated.hpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = opengl_interop_deprecated.hpp; path = ../../../addons/ofxOpenCv/libs/opencv/include/opencv2/core/opengl_interop_deprecated.hpp; sourceTree = SOURCE_ROOT; };
@@ -733,6 +736,8 @@
 				E4B69E1F0A3A1BDC003C02F2 /* ofApp.h */,
 				2D81A5AA1C1FE0AF000F0644 /* ShaderFX.cpp */,
 				2D81A5AB1C1FE0AF000F0644 /* ShaderFX.hpp */,
+				2DD8E87C1C21578B00E82A21 /* WebCam.cpp */,
+				2DD8E87D1C21578B00E82A21 /* WebCam.hpp */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -862,6 +867,7 @@
 				B56FE57CC35806596D38118C /* ofxSliderGroup.cpp in Sources */,
 				1CD33E884D9E3358252E82A1 /* ofxToggle.cpp in Sources */,
 				2D81A5AC1C1FE0AF000F0644 /* ShaderFX.cpp in Sources */,
+				2DD8E87E1C21578B00E82A21 /* WebCam.cpp in Sources */,
 				250A95BA26587BE85DB0A353 /* ofxCvColorImage.cpp in Sources */,
 				1D5F3298C2FA073628012944 /* ofxCvContourFinder.cpp in Sources */,
 				169D3C72FDE6C5590A1616F5 /* ofxCvFloatImage.cpp in Sources */,

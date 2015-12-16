@@ -3,15 +3,17 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     
-
+    ofSetVerticalSync(true);
     
     gui.setup();
+    gui.add(useWebCam.set("use WebCam", false));
     gui.add(enableBlur.set("enable Blur",false));
     gui.add(bluramt.set("blur amount", 0.0, 0.0, 5.0));
     gui.add(enableBW.set("enable B/W",false));
     gui.add(bwShift.set("B/W shift", 0.0, -1.0, 1.0));
     gui.add(enableDistort.set("enable distortion",false));
     gui.add(enableMix.set("enable mix", false));
+    gui.add(swapVid.set("swap video", false));
     gui.add(mixMode.set("mix mode", 0, 0, 2));
     gui.add(mixOpacity.set("mix opacity", 1.0, 0 ,1.0));
     
@@ -24,6 +26,8 @@ void ofApp::setup(){
 
     
     effects.setup();
+    
+    cam.setup(320, 240);
 
 }
 
@@ -33,20 +37,38 @@ void ofApp::update(){
     if (twoVideos) video2.update();
     
     effects.update();
+    if(useWebCam) {
+        cam.init();
+        cam.update();
+    }else{
+        cam.close();
+    }
 
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
     
+
+    
     
     if (!vidDropped) {
         ofDrawBitmapString(greeting, 20, 20);
     }else{
         
-        effects.rawOutput(video, output);
+        if (useWebCam) {
+            video.stop();
+            output.allocate(cam.camWidth, cam.camHeight);
+            effects.rawOutput(cam.vidGrabber, output);
+        }else{
+            video.play();
+            output.allocate(video.getWidth(), video.getHeight());
+            effects.rawOutput(video, output);
+        }
+        
+
         if (twoVideos && enableMix){
-            effects.mixVid(video2, output, output2, mixMode, mixOpacity);
+            effects.mixVid(video2, output, output2, mixMode, mixOpacity, swapVid);
         }
         
         if (enableBlur) {
@@ -59,12 +81,19 @@ void ofApp::draw(){
             effects.distortion(output);
         }
 
+        
         output.draw(videoPos);
+        // if (useWebCam)cam.draw(videoPos);
         
         gui.draw();
-        ofDrawBitmapString("File Path: " + filepath, gui.getWidth() + 30, ofGetHeight() - 10);
-        if (twoVideos)ofDrawBitmapString("File Path 2: " + filepath2, gui.getWidth() + 30, ofGetHeight() - 20);
-        ofSetWindowShape(gui.getWidth() + video.getWidth() + 20, video.getHeight());
+        
+        if (!useWebCam) {
+            ofSetWindowShape(gui.getWidth() + video.getWidth() + 20, video.getHeight());
+        }else{
+            ofSetWindowShape(gui.getWidth() + cam.camWidth + 20, cam.camHeight);
+            ofDrawBitmapString("File Path: " + filepath, gui.getWidth() + 30, ofGetHeight() - 10);
+            if (twoVideos)ofDrawBitmapString("File Path 2: " + filepath2, gui.getWidth() + 30, ofGetHeight() - 20);
+        }
     }
 }
 
