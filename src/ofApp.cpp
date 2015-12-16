@@ -69,9 +69,15 @@ void ofApp::draw(){
             output.allocate(cam.camWidth, cam.camHeight);
             effects.rawOutput(cam.vidGrabber, output);
         }else{
-            video.play();
-            output.allocate(video.getWidth(), video.getHeight());
-            effects.rawOutput(video, output);
+            if (video.getHeight() == 0) {
+                useWebCam = true;
+                cam.init();
+                cam.update();
+            }else{
+                video.play();
+                output.allocate(video.getWidth(), video.getHeight());
+                effects.rawOutput(video, output);
+            }
         }
         
 
