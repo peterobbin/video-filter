@@ -11,6 +11,7 @@ In order to add effects, an ofFbo object is required to process the video.
 - Easy drag & drop integration 
 - Video Mixer
 - Blending Settings
+- Grabbing webcam
 
 ## TODO
 - Record and export

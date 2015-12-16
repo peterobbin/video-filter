@@ -8,6 +8,8 @@
 
 #pragma once
 #include "ofMain.h"
+#include "ofxCv.h"
+#include "ofxFaceTracker.h"
 
 
 class WebCam{
@@ -20,7 +22,10 @@ public:
     
     
     ofVideoGrabber vidGrabber;
+    ofxFaceTracker tracker;
     int camWidth;
     int camHeight;
     bool initComplete;
+    
+    ofVec2f nosePos;
 };

@@ -29,19 +29,26 @@ void WebCam::setup(int _width, int _height){
     vidGrabber.setDesiredFrameRate(60);
     initComplete = false;
     
+    
 
 }
 
 void WebCam::init(){
-    if (!initComplete)vidGrabber.initGrabber(camWidth, camHeight);
+    if (!initComplete){
+        vidGrabber.initGrabber(camWidth, camHeight);
+        tracker.setup();
+    }
+    
     initComplete = true;
 }
 
 void WebCam::update(){
     vidGrabber.update();
-
-
-
+    if(vidGrabber.isFrameNew()) {
+        tracker.update(ofxCv::toCv(vidGrabber));
+        ofPolyline noseBase = tracker.getImageFeature(ofxFaceTracker::NOSE_BASE);
+        nosePos = ofVec2f(noseBase.getCentroid2D().x, noseBase.getCentroid2D().y);
+    }
 }
 
 void WebCam::close(){
@@ -51,6 +58,7 @@ void WebCam::close(){
 
 
 void WebCam::draw(ofVec2f _pos){
-
     vidGrabber.draw(_pos);
+    
+    
 }
