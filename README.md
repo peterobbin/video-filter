@@ -12,16 +12,15 @@ In order to add effects, an ofFbo object is required to process the video.
 - Video Mixer
 - Blending Settings
 - Grabbing webcam
+-  Face tracking warp effect
 
 ## TODO
 - Record and export
-- Face tracking
 - Adding previous effects from of-light-fx
+- bug fix
 
 ## Possible Effects:
 - Color correction 
-- Bloom
-- Lens Effects (calculating brightest pixels)
 - Depth Blur for Kinect Image
 - Face Block?
 -  Depth Camera Integration

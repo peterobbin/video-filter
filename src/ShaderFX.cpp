@@ -15,6 +15,7 @@ void ShaderFX::setup(){
     shaderBW.load("bw.vert", "bw.frag");
     shaderDistortion.load("distort.vert", "distort.frag");
     shaderMix.load("mix.vert", "mix.frag");
+    shaderWarp.load("warp.vert", "warp.frag");
     //ofDisableArbTex();
 
 }
@@ -26,6 +27,7 @@ void ShaderFX::update(){
     shaderBW.load("bw.vert", "bw.frag");
     shaderMix.load("mix.vert", "mix.frag");
     shaderDistortion.load("distort.vert", "distort.frag");
+    shaderWarp.load("warp.vert", "warp.frag");
 }
 
 
@@ -97,6 +99,38 @@ void ShaderFX::distortion(ofFbo &output){
     
     output = distortFX;
 
+}
+
+
+void ShaderFX::faceWarp(ofFbo &output, bool useCam, ofVec2f &nosePos){
+    ofFbo warpFX;
+    warpFX.allocate(output.getWidth(), output.getHeight());
+    warpFX.begin();
+    
+    
+    ofVec2f mousePos;
+    
+    if (useCam){
+        mousePos = nosePos;
+    }else{
+        mousePos = ofVec2f(ofGetMouseX(), ofGetMouseY());
+        
+    
+    }
+    
+    shaderWarp.begin();
+    shaderWarp.setUniform1f("u_time", ofGetElapsedTimef());
+    shaderWarp.setUniform2f("u_mouse", mousePos.x, mousePos.y);
+    shaderWarp.setUniform2f("u_resolution", ofGetWidth(), ofGetHeight());
+    shaderWarp.setUniform2f("u_tex0Resolution", output.getWidth(), output.getHeight());
+    output.draw(0, 0);
+    
+    shaderWarp.end();
+    warpFX.end();
+    //cout<<ofGetElapsedTimef()<<endl;
+    
+    output = warpFX;
+    
 }
 
 void ShaderFX::mixVid(ofVideoPlayer &vid2, ofFbo &output, ofFbo &output2, int mode, float opacity, bool swap){

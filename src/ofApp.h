@@ -45,6 +45,7 @@ class ofApp : public ofBaseApp{
     bool vidDropped;
     bool twoVideos;
     string greeting;
+    string altGreeting;
     string filepath;
     string filepath2;
     
@@ -54,6 +55,7 @@ class ofApp : public ofBaseApp{
     ofParameter<bool> enableBW;
     ofParameter<float> bwShift;
     ofParameter<bool> enableDistort;
+    ofParameter<bool> enableWarp;
     ofParameter<bool> enableMix;
     ofParameter<bool> swapVid;
     ofParameter<int> mixMode;

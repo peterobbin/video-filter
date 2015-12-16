@@ -12,6 +12,7 @@ void ofApp::setup(){
     gui.add(enableBW.set("enable B/W",false));
     gui.add(bwShift.set("B/W shift", 0.0, -1.0, 1.0));
     gui.add(enableDistort.set("enable distortion",false));
+    gui.add(enableWarp.set("enable warp", false));
     gui.add(enableMix.set("enable mix", false));
     gui.add(swapVid.set("swap video", false));
     gui.add(mixMode.set("mix mode", 0, 0, 2));
@@ -19,7 +20,9 @@ void ofApp::setup(){
     
     ofBackground(50);
     videoPos = ofVec2f(gui.getWidth() + 20, 0);
-    greeting = "Drag & Drop Video to Start";
+    greeting = "Drag & drop video to start";
+    altGreeting = "or press s to use webcam";
+    
     
     ofSetWindowShape(8 * greeting.length() + 40, 13.6 + 40);
     ofSetWindowPosition(ofGetScreenWidth() / 2 - ofGetWidth()/2, ofGetScreenHeight()/2 - ofGetHeight());
@@ -27,16 +30,20 @@ void ofApp::setup(){
     
     effects.setup();
     
-    cam.setup(320, 240);
+    cam.setup(640, 480);
 
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
     video.update();
+    if (video.getHeight() == 0 && useWebCam){
+        useWebCam = true;
+    }
     if (twoVideos) video2.update();
     
     effects.update();
+    
     if(useWebCam) {
         cam.init();
         cam.update();
@@ -54,6 +61,7 @@ void ofApp::draw(){
     
     if (!vidDropped) {
         ofDrawBitmapString(greeting, 20, 20);
+        ofDrawBitmapString(altGreeting, 20, 35);
     }else{
         
         if (useWebCam) {
@@ -80,6 +88,10 @@ void ofApp::draw(){
         if (enableDistort){
             effects.distortion(output);
         }
+        
+        if (enableWarp) {
+            effects.faceWarp(output, useWebCam, cam.nosePos);
+        }
 
         
         output.draw(videoPos);
@@ -89,10 +101,11 @@ void ofApp::draw(){
         
         if (!useWebCam) {
             ofSetWindowShape(gui.getWidth() + video.getWidth() + 20, video.getHeight());
-        }else{
-            ofSetWindowShape(gui.getWidth() + cam.camWidth + 20, cam.camHeight);
             ofDrawBitmapString("File Path: " + filepath, gui.getWidth() + 30, ofGetHeight() - 10);
             if (twoVideos)ofDrawBitmapString("File Path 2: " + filepath2, gui.getWidth() + 30, ofGetHeight() - 20);
+        }else{
+            ofSetWindowShape(gui.getWidth() + cam.camWidth + 20, cam.camHeight);
+            
         }
     }
 }
@@ -100,6 +113,19 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
+    switch(key){
+        case 's':
+            if (!useWebCam){
+                useWebCam = true;
+                vidDropped = true;
+            }
+            break;
+       
+        default:
+            break;
+    }
+    
+
 
 }
 
