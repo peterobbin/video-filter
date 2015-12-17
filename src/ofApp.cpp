@@ -106,17 +106,7 @@ void ofApp::draw(){
         ofDrawBitmapString(greeting, 20, 20);
         ofDrawBitmapString(altGreeting, 20, 35);
     }else{
-        
-//        if (useWebCam) {
-//            video.stop();
-//            output.allocate(cam.camWidth, cam.camHeight);
-//            effects.rawOutput(cam.vidGrabber, output);
-//        }else{
-//            video.play();
-//            output.allocate(video.getWidth(), video.getHeight());
-//            effects.rawOutput(video, output);
-//        }
-        
+        //  shaders start here
         if (useWebCam) {
             video.stop();
             output.allocate(cam.camWidth, cam.camHeight);
@@ -133,7 +123,7 @@ void ofApp::draw(){
             }
         }
         
-
+        
         if (twoVideos && enableMix){
             effects.mixVid(video2, output, output2, mixMode, mixOpacity, swapVid);
         }
