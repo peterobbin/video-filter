@@ -149,14 +149,6 @@ void ShaderFX::mixVid(ofVideoPlayer &vid2, ofFbo &output, ofFbo &output2, int mo
         vid2.draw(0, 0);
         output2.end();
         
-        glActiveTextureARB(GL_TEXTURE0_ARB);
-        
-        output.getTexture().bind();
-        
-        glActiveTextureARB(GL_TEXTURE1_ARB);
-        output2.getTexture().bind();
-
-        
         ofFbo mixFX;
         ofFbo mixFX2;
         mixFX.allocate(output.getWidth(), output.getHeight());
@@ -176,12 +168,6 @@ void ShaderFX::mixVid(ofVideoPlayer &vid2, ofFbo &output, ofFbo &output2, int mo
         mixFX.end();
         output = mixFX;
         
-        glActiveTextureARB(GL_TEXTURE0_ARB);
-        
-        output.getTexture().unbind();
-        
-        glActiveTextureARB(GL_TEXTURE1_ARB);
-        output2.getTexture().unbind();
     }
     
 }
